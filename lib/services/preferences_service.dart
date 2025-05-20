@@ -7,39 +7,62 @@ class PreferencesService {
   final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
 
   // General settings
-  Future<bool> getLaunchAtStartup() async => await _prefs.getBool('launchAtStartup') ?? false;
-  Future<bool> getAutoHideEnabled() async => await _prefs.getBool('autoHideEnabled') ?? false;
-  Future<double> getAutoHideDuration() async => await _prefs.getDouble('autoHideDuration') ?? 2.0;
+  Future<bool> getLaunchAtStartup() async =>
+      await _prefs.getBool('launchAtStartup') ?? false;
+  Future<bool> getAutoHideEnabled() async =>
+      await _prefs.getBool('autoHideEnabled') ?? false;
+  Future<double> getAutoHideDuration() async =>
+      await _prefs.getDouble('autoHideDuration') ?? 2.0;
   Future<double> getOpacity() async => await _prefs.getDouble('opacity') ?? 0.6;
-  Future<String> getKeyboardLayoutName() async => await _prefs.getString('layout') ?? 'QWERTY';
+  Future<String> getKeyboardLayoutName() async =>
+      await _prefs.getString('layout') ?? 'QWERTY';
+  Future<String> getPhysicalKeyboardLayoutName() async =>
+      await _prefs.getString('physicalLayout') ?? 'QWERTY';
 
   // Keyboard settings
-  Future<String> getKeymapStyle() async => await _prefs.getString('keymapStyle') ?? 'Staggered';
-  Future<bool> getShowTopRow() async => await _prefs.getBool('showTopRow') ?? false;
-  Future<bool> getShowGraveKey() async => await _prefs.getBool('showGraveKey') ?? false;
+  Future<String> getKeymapStyle() async =>
+      await _prefs.getString('keymapStyle') ?? 'Staggered';
+  Future<bool> getShowTopRow() async =>
+      await _prefs.getBool('showTopRow') ?? false;
+  Future<bool> getShowGraveKey() async =>
+      await _prefs.getBool('showGraveKey') ?? false;
   Future<double> getKeySize() async => await _prefs.getDouble('keySize') ?? 48;
-  Future<double> getKeyBorderRadius() async => await _prefs.getDouble('keyBorderRadius') ?? 12;
-  Future<double> getKeyBorderThickness() async => await _prefs.getDouble('keyBorderThickness') ?? 0;
-  Future<double> getKeyPadding() async => await _prefs.getDouble('keyPadding') ?? 3;
-  Future<double> getSpaceWidth() async => await _prefs.getDouble('spaceWidth') ?? 320;
-  Future<double> getSplitWidth() async => await _prefs.getDouble('splitWidth') ?? 100;
-  Future<double> getLastRowSplitWidth() async => await _prefs.getDouble('lastRowSplitWidth') ?? 100;
+  Future<double> getKeyBorderRadius() async =>
+      await _prefs.getDouble('keyBorderRadius') ?? 12;
+  Future<double> getKeyBorderThickness() async =>
+      await _prefs.getDouble('keyBorderThickness') ?? 0;
+  Future<double> getKeyPadding() async =>
+      await _prefs.getDouble('keyPadding') ?? 3;
+  Future<double> getSpaceWidth() async =>
+      await _prefs.getDouble('spaceWidth') ?? 320;
+  Future<double> getSplitWidth() async =>
+      await _prefs.getDouble('splitWidth') ?? 100;
+  Future<double> getLastRowSplitWidth() async =>
+      await _prefs.getDouble('lastRowSplitWidth') ?? 100;
   Future<double> getKeyShadowBlurRadius() async =>
       await _prefs.getDouble('keyShadowBlurRadius') ?? 4;
-  Future<double> getKeyShadowOffsetX() async => await _prefs.getDouble('keyShadowOffsetX') ?? 0;
-  Future<double> getKeyShadowOffsetY() async => await _prefs.getDouble('keyShadowOffsetY') ?? 2;
+  Future<double> getKeyShadowOffsetX() async =>
+      await _prefs.getDouble('keyShadowOffsetX') ?? 0;
+  Future<double> getKeyShadowOffsetY() async =>
+      await _prefs.getDouble('keyShadowOffsetY') ?? 2;
 
   // Text settings
-  Future<String> getFontFamily() async => await _prefs.getString('fontFamily') ?? 'GeistMono';
-  Future<FontWeight> getFontWeight() async =>
-      FontWeight.values[await _prefs.getInt('fontWeight') ?? FontWeight.w500.index];
-  Future<double> getKeyFontSize() async => await _prefs.getDouble('keyFontSize') ?? 20;
-  Future<double> getSpaceFontSize() async => await _prefs.getDouble('spaceFontSize') ?? 14;
+  Future<String> getFontFamily() async =>
+      await _prefs.getString('fontFamily') ?? 'GeistMono';
+  Future<FontWeight> getFontWeight() async => FontWeight
+      .values[await _prefs.getInt('fontWeight') ?? FontWeight.w500.index];
+  Future<double> getKeyFontSize() async =>
+      await _prefs.getDouble('keyFontSize') ?? 20;
+  Future<double> getSpaceFontSize() async =>
+      await _prefs.getDouble('spaceFontSize') ?? 14;
 
   // Markers settings
-  Future<double> getMarkerOffset() async => await _prefs.getDouble('markerOffset') ?? 10;
-  Future<double> getMarkerWidth() async => await _prefs.getDouble('markerWidth') ?? 10;
-  Future<double> getMarkerHeight() async => await _prefs.getDouble('markerHeight') ?? 2;
+  Future<double> getMarkerOffset() async =>
+      await _prefs.getDouble('markerOffset') ?? 10;
+  Future<double> getMarkerWidth() async =>
+      await _prefs.getDouble('markerWidth') ?? 10;
+  Future<double> getMarkerHeight() async =>
+      await _prefs.getDouble('markerHeight') ?? 2;
   Future<double> getMarkerBorderRadius() async =>
       await _prefs.getDouble('markerBorderRadius') ?? 10;
 
@@ -48,10 +71,12 @@ class PreferencesService {
       Color(await _prefs.getInt('keyColorPressed') ?? 0xFF1E1E1E);
   Future<Color> getKeyColorNotPressed() async =>
       Color(await _prefs.getInt('keyColorNotPressed') ?? 0xFF77ABFF);
-  Future<Color> getMarkerColor() async => Color(await _prefs.getInt('markerColor') ?? 0xFFFFFFFF);
+  Future<Color> getMarkerColor() async =>
+      Color(await _prefs.getInt('markerColor') ?? 0xFFFFFFFF);
   Future<Color> getMarkerColorNotPressed() async =>
       Color(await _prefs.getInt('markerColorNotPressed') ?? 0xFF000000);
-  Future<Color> getKeyTextColor() async => Color(await _prefs.getInt('keyTextColor') ?? 0xFFFFFFFF);
+  Future<Color> getKeyTextColor() async =>
+      Color(await _prefs.getInt('keyTextColor') ?? 0xFFFFFFFF);
   Future<Color> getKeyTextColorNotPressed() async =>
       Color(await _prefs.getInt('keyTextColorNotPressed') ?? 0xFF000000);
   Future<Color> getKeyBorderColorPressed() async =>
@@ -60,10 +85,14 @@ class PreferencesService {
       Color(await _prefs.getInt('keyBorderColorNotPressed') ?? 0xFFFFFFFF);
 
   // Animations settings
-  Future<bool> getAnimationEnabled() async => await _prefs.getBool('animationEnabled') ?? false;
-  Future<String> getAnimationStyle() async => await _prefs.getString('animationStyle') ?? 'Raise';
-  Future<double> getAnimationDuration() async => await _prefs.getDouble('animationDuration') ?? 100;
-  Future<double> getAnimationScale() async => await _prefs.getDouble('animationScale') ?? 2.0;
+  Future<bool> getAnimationEnabled() async =>
+      await _prefs.getBool('animationEnabled') ?? false;
+  Future<String> getAnimationStyle() async =>
+      await _prefs.getString('animationStyle') ?? 'Raise';
+  Future<double> getAnimationDuration() async =>
+      await _prefs.getDouble('animationDuration') ?? 100;
+  Future<double> getAnimationScale() async =>
+      await _prefs.getDouble('animationScale') ?? 2.0;
 
   // HotKey settings
   Future<HotKey?> _getHotKey(
@@ -82,19 +111,26 @@ class PreferencesService {
     }
   }
 
-  Future<bool> getHotKeysEnabled() async => await _prefs.getBool('enableHotKeys') ?? false;
-  Future<HotKey?> getVisibilityHotKey() async => _getHotKey(
-      'visibilityHotKey', PhysicalKeyboardKey.keyQ, [HotKeyModifier.alt, HotKeyModifier.control]);
-  Future<HotKey?> getAutoHideHotKey() async => _getHotKey(
-      'autoHideHotKey', PhysicalKeyboardKey.keyW, [HotKeyModifier.alt, HotKeyModifier.control]);
-  Future<HotKey?> getToggleMoveHotKey() async => _getHotKey(
-      'toggleMoveHotKey', PhysicalKeyboardKey.keyE, [HotKeyModifier.alt, HotKeyModifier.control]);
+  Future<bool> getHotKeysEnabled() async =>
+      await _prefs.getBool('enableHotKeys') ?? false;
+  Future<HotKey?> getVisibilityHotKey() async => _getHotKey('visibilityHotKey',
+      PhysicalKeyboardKey.keyQ, [HotKeyModifier.alt, HotKeyModifier.control]);
+  Future<HotKey?> getAutoHideHotKey() async => _getHotKey('autoHideHotKey',
+      PhysicalKeyboardKey.keyW, [HotKeyModifier.alt, HotKeyModifier.control]);
+  Future<HotKey?> getToggleMoveHotKey() async => _getHotKey('toggleMoveHotKey',
+      PhysicalKeyboardKey.keyE, [HotKeyModifier.alt, HotKeyModifier.control]);
   Future<HotKey?> getPreferencesHotKey() async => _getHotKey(
-      'preferencesHotKey', PhysicalKeyboardKey.keyR, [HotKeyModifier.alt, HotKeyModifier.control]);
-  Future<HotKey?> getIncreaseOpacityHotKey() async => _getHotKey('increaseOpacityHotKey',
-      PhysicalKeyboardKey.arrowUp, [HotKeyModifier.alt, HotKeyModifier.control]);
-  Future<HotKey?> getDecreaseOpacityHotKey() async => _getHotKey('decreaseOpacityHotKey',
-      PhysicalKeyboardKey.arrowDown, [HotKeyModifier.alt, HotKeyModifier.control]);
+      'preferencesHotKey',
+      PhysicalKeyboardKey.keyR,
+      [HotKeyModifier.alt, HotKeyModifier.control]);
+  Future<HotKey?> getIncreaseOpacityHotKey() async => _getHotKey(
+      'increaseOpacityHotKey',
+      PhysicalKeyboardKey.arrowUp,
+      [HotKeyModifier.alt, HotKeyModifier.control]);
+  Future<HotKey?> getDecreaseOpacityHotKey() async => _getHotKey(
+      'decreaseOpacityHotKey',
+      PhysicalKeyboardKey.arrowDown,
+      [HotKeyModifier.alt, HotKeyModifier.control]);
   Future<bool> getEnableVisibilityHotKey() async =>
       await _prefs.getBool('enableVisibilityHotKey') ?? true;
   Future<bool> getEnableAutoHideHotKey() async =>
@@ -131,11 +167,16 @@ class PreferencesService {
   // Advanced settings
   Future<bool> getAdvancedSettingsEnabled() async =>
       await _prefs.getBool('advancedSettingsEnabled') ?? false;
-  Future<bool> getUseUserLayout() async => await _prefs.getBool('useUserLayout') ?? false;
-  Future<bool> getShowAltLayout() async => await _prefs.getBool('showAltLayout') ?? false;
-  Future<bool> getCustomFontEnabled() async => await _prefs.getBool('customFontEnabled') ?? false;
-  Future<bool> getUse6ColLayout() async => await _prefs.getBool('use6ColLayout') ?? false;
-  Future<bool> getKanataEnabled() async => await _prefs.getBool('kanataEnabled') ?? false;
+  Future<bool> getUseUserLayout() async =>
+      await _prefs.getBool('useUserLayout') ?? false;
+  Future<bool> getShowAltLayout() async =>
+      await _prefs.getBool('showAltLayout') ?? false;
+  Future<bool> getCustomFontEnabled() async =>
+      await _prefs.getBool('customFontEnabled') ?? false;
+  Future<bool> getUse6ColLayout() async =>
+      await _prefs.getBool('use6ColLayout') ?? false;
+  Future<bool> getKanataEnabled() async =>
+      await _prefs.getBool('kanataEnabled') ?? false;
   Future<bool> getKeyboardFollowsMouse() async =>
       await _prefs.getBool('keyboardFollowsMouse') ?? false;
 
@@ -146,21 +187,32 @@ class PreferencesService {
       await _prefs.setBool('autoHideEnabled', value);
   Future<void> setAutoHideDuration(double value) async =>
       await _prefs.setDouble('autoHideDuration', value);
-  Future<void> setOpacity(double value) async => await _prefs.setDouble('opacity', value);
-  Future<void> setKeyboardLayoutName(String value) async => await _prefs.setString('layout', value);
+  Future<void> setOpacity(double value) async =>
+      await _prefs.setDouble('opacity', value);
+  Future<void> setKeyboardLayoutName(String value) async =>
+      await _prefs.setString('layout', value);
+  Future<void> setPhysicalKeyboardLayoutName(String value) async =>
+      await _prefs.setString('physicalLayout', value);
 
   // Keyboard settings
-  Future<void> setKeymapStyle(String value) async => await _prefs.setString('keymapStyle', value);
-  Future<void> setShowTopRow(bool value) async => await _prefs.setBool('showTopRow', value);
-  Future<void> setShowGraveKey(bool value) async => await _prefs.setBool('showGraveKey', value);
-  Future<void> setKeySize(double value) async => await _prefs.setDouble('keySize', value);
+  Future<void> setKeymapStyle(String value) async =>
+      await _prefs.setString('keymapStyle', value);
+  Future<void> setShowTopRow(bool value) async =>
+      await _prefs.setBool('showTopRow', value);
+  Future<void> setShowGraveKey(bool value) async =>
+      await _prefs.setBool('showGraveKey', value);
+  Future<void> setKeySize(double value) async =>
+      await _prefs.setDouble('keySize', value);
   Future<void> setKeyBorderRadius(double value) async =>
       await _prefs.setDouble('keyBorderRadius', value);
   Future<void> setKeyBorderThickness(double value) async =>
       await _prefs.setDouble('keyBorderThickness', value);
-  Future<void> setKeyPadding(double value) async => await _prefs.setDouble('keyPadding', value);
-  Future<void> setSpaceWidth(double value) async => await _prefs.setDouble('spaceWidth', value);
-  Future<void> setSplitWidth(double value) async => await _prefs.setDouble('splitWidth', value);
+  Future<void> setKeyPadding(double value) async =>
+      await _prefs.setDouble('keyPadding', value);
+  Future<void> setSpaceWidth(double value) async =>
+      await _prefs.setDouble('spaceWidth', value);
+  Future<void> setSplitWidth(double value) async =>
+      await _prefs.setDouble('splitWidth', value);
   Future<void> setLastRowSplitWidth(double value) async =>
       await _prefs.setDouble('lastRowSplitWidth', value);
   Future<void> setKeyShadowBlurRadius(double value) async =>
@@ -171,17 +223,22 @@ class PreferencesService {
       await _prefs.setDouble('keyShadowOffsetY', value);
 
   // Text settings
-  Future<void> setFontFamily(String value) async => await _prefs.setString('fontFamily', value);
-  Future<void> setKeyFontSize(double value) async => await _prefs.setDouble('keyFontSize', value);
+  Future<void> setFontFamily(String value) async =>
+      await _prefs.setString('fontFamily', value);
+  Future<void> setKeyFontSize(double value) async =>
+      await _prefs.setDouble('keyFontSize', value);
   Future<void> setSpaceFontSize(double value) async =>
       await _prefs.setDouble('spaceFontSize', value);
   Future<void> setFontWeight(FontWeight value) async =>
       await _prefs.setInt('fontWeight', value.index);
 
   // Markers settings
-  Future<void> setMarkerOffset(double value) async => await _prefs.setDouble('markerOffset', value);
-  Future<void> setMarkerWidth(double value) async => await _prefs.setDouble('markerWidth', value);
-  Future<void> setMarkerHeight(double value) async => await _prefs.setDouble('markerHeight', value);
+  Future<void> setMarkerOffset(double value) async =>
+      await _prefs.setDouble('markerOffset', value);
+  Future<void> setMarkerWidth(double value) async =>
+      await _prefs.setDouble('markerWidth', value);
+  Future<void> setMarkerHeight(double value) async =>
+      await _prefs.setDouble('markerHeight', value);
   Future<void> setMarkerBorderRadius(double value) async =>
       await _prefs.setDouble('markerBorderRadius', value);
 
@@ -214,7 +271,8 @@ class PreferencesService {
       await _prefs.setDouble('animationScale', value);
 
   // HotKey settings
-  Future<void> setHotKeysEnabled(bool value) async => await _prefs.setBool('enableHotKeys', value);
+  Future<void> setHotKeysEnabled(bool value) async =>
+      await _prefs.setBool('enableHotKeys', value);
   Future<void> setVisibilityHotKey(HotKey value) async =>
       await _prefs.setString('visibilityHotKey', jsonEncode(value.toJson()));
   Future<void> setAutoHideHotKey(HotKey value) async =>
@@ -223,10 +281,10 @@ class PreferencesService {
       await _prefs.setString('toggleMoveHotKey', jsonEncode(value.toJson()));
   Future<void> setPreferencesHotKey(HotKey value) async =>
       await _prefs.setString('preferencesHotKey', jsonEncode(value.toJson()));
-  Future<void> setIncreaseOpacityHotKey(HotKey value) async =>
-      await _prefs.setString('increaseOpacityHotKey', jsonEncode(value.toJson()));
-  Future<void> setDecreaseOpacityHotKey(HotKey value) async =>
-      await _prefs.setString('decreaseOpacityHotKey', jsonEncode(value.toJson()));
+  Future<void> setIncreaseOpacityHotKey(HotKey value) async => await _prefs
+      .setString('increaseOpacityHotKey', jsonEncode(value.toJson()));
+  Future<void> setDecreaseOpacityHotKey(HotKey value) async => await _prefs
+      .setString('decreaseOpacityHotKey', jsonEncode(value.toJson()));
   Future<void> setEnableVisibilityHotKey(bool value) async =>
       await _prefs.setBool('enableVisibilityHotKey', value);
   Future<void> setEnableAutoHideHotKey(bool value) async =>
@@ -263,12 +321,16 @@ class PreferencesService {
   // Advanced settings
   Future<void> setAdvancedSettingsEnabled(bool value) async =>
       await _prefs.setBool('advancedSettingsEnabled', value);
-  Future<void> setUseUserLayout(bool value) async => await _prefs.setBool('useUserLayout', value);
-  Future<void> setShowAltLayout(bool value) async => await _prefs.setBool('showAltLayout', value);
+  Future<void> setUseUserLayout(bool value) async =>
+      await _prefs.setBool('useUserLayout', value);
+  Future<void> setShowAltLayout(bool value) async =>
+      await _prefs.setBool('showAltLayout', value);
   Future<void> setCustomFontEnabled(bool value) async =>
       await _prefs.setBool('customFontEnabled', value);
-  Future<void> setUse6ColLayout(bool value) async => await _prefs.setBool('use6ColLayout', value);
-  Future<void> setKanataEnabled(bool value) async => await _prefs.setBool('kanataEnabled', value);
+  Future<void> setUse6ColLayout(bool value) async =>
+      await _prefs.setBool('use6ColLayout', value);
+  Future<void> setKanataEnabled(bool value) async =>
+      await _prefs.setBool('kanataEnabled', value);
   Future<void> setKeyboardFollowsMouse(bool value) async =>
       await _prefs.setBool('keyboardFollowsMouse', value);
 
@@ -292,6 +354,7 @@ class PreferencesService {
         'autoHideDuration': await getAutoHideDuration(),
         'opacity': await getOpacity(),
         'keyboardLayoutName': await getKeyboardLayoutName(),
+        'physicalKeyboardLayoutName': await getPhysicalKeyboardLayoutName(),
       };
 
   Future<Map<String, dynamic>> _loadKeyboardPreferences() async => {
@@ -387,6 +450,7 @@ class PreferencesService {
     await setAutoHideDuration(prefs['autoHideDuration']);
     await setOpacity(prefs['opacity']);
     await setKeyboardLayoutName(prefs['keyboardLayoutName']);
+    await setPhysicalKeyboardLayoutName(prefs['physicalKeyboardLayoutName']);
 
     // Keyboard settings
     await setKeymapStyle(prefs['keymapStyle']);
@@ -443,8 +507,10 @@ class PreferencesService {
     await setEnableAutoHideHotKey(prefs['enableAutoHideHotKey'] ?? true);
     await setEnableToggleMoveHotKey(prefs['enableToggleMoveHotKey'] ?? true);
     await setEnablePreferencesHotKey(prefs['enablePreferencesHotKey'] ?? true);
-    await setEnableIncreaseOpacityHotKey(prefs['enableIncreaseOpacityHotKey'] ?? true);
-    await setEnableDecreaseOpacityHotKey(prefs['enableDecreaseOpacityHotKey'] ?? true);
+    await setEnableIncreaseOpacityHotKey(
+        prefs['enableIncreaseOpacityHotKey'] ?? true);
+    await setEnableDecreaseOpacityHotKey(
+        prefs['enableDecreaseOpacityHotKey'] ?? true);
 
     // Learn settings
     await setLearningModeEnabled(prefs['learningModeEnabled'] ?? false);

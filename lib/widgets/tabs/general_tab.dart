@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overkeys/models/keyboard_virtual_layouts.dart';
 import 'package:overkeys/widgets/options/options.dart';
 import 'package:overkeys/models/keyboard_layouts.dart';
 
@@ -7,11 +8,13 @@ class GeneralTab extends StatefulWidget {
   final bool autoHideEnabled;
   final double autoHideDuration;
   final String keyboardLayoutName;
+  final String physicalKeyboardLayoutName;
   final double opacity;
   final Function(bool) updateLaunchAtStartup;
   final Function(bool) updateAutoHideEnabled;
   final Function(double) updateAutoHideDuration;
   final Function(String) updateKeyboardLayoutName;
+  final Function(String) updatePhysicalKeyboardLayoutName;
   final Function(double) updateOpacity;
 
   const GeneralTab({
@@ -20,11 +23,13 @@ class GeneralTab extends StatefulWidget {
     required this.autoHideEnabled,
     required this.autoHideDuration,
     required this.keyboardLayoutName,
+    required this.physicalKeyboardLayoutName,
     required this.opacity,
     required this.updateLaunchAtStartup,
     required this.updateAutoHideEnabled,
     required this.updateAutoHideDuration,
     required this.updateKeyboardLayoutName,
+    required this.updatePhysicalKeyboardLayoutName,
     required this.updateOpacity,
   });
 
@@ -107,8 +112,16 @@ class _GeneralTabState extends State<GeneralTab> {
         DropdownOption(
           label: 'Layout',
           value: widget.keyboardLayoutName,
-          options: availableLayouts.map((layout) => (layout.name)).toList(),
+          options: (availableLayouts + availableVirtualLayouts)
+              .map((layout) => (layout.name))
+              .toList(),
           onChanged: (value) => widget.updateKeyboardLayoutName(value!),
+        ),
+        DropdownOption(
+          label: 'PhysicalLayout',
+          value: widget.physicalKeyboardLayoutName,
+          options: availableLayouts.map((layout) => (layout.name)).toList(),
+          onChanged: (value) => widget.updatePhysicalKeyboardLayoutName(value!),
         ),
         Text(
           'Tip: Press ESC key to close the preferences window',

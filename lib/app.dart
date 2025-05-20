@@ -9,6 +9,7 @@ import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:overkeys/models/keyboard_virtual_layouts.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:overkeys/services/config_service.dart';
@@ -54,7 +55,9 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
   double _opacity = 0.6;
   double _lastOpacity = 0.6;
   KeyboardLayout _keyboardLayout = qwerty;
+  KeyboardLayout _physicalKeyboardLayout = qwerty;
   KeyboardLayout? _initialKeyboardLayout;
+  KeyboardLayout? _initialPhysicalKeyboardLayout;
   KeyboardLayout? _defaultUserLayout;
 
   // Keyboard settings
@@ -233,9 +236,12 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
       _autoHideDuration = prefs['autoHideDuration'];
       _opacity = prefs['opacity'];
       _lastOpacity = prefs['opacity'];
-      _keyboardLayout =
-          availableLayouts.firstWhere((layout) => layout.name == prefs['keyboardLayoutName']);
+      _keyboardLayout = (availableLayouts + availableVirtualLayouts)
+          .firstWhere((layout) => layout.name == prefs['keyboardLayoutName']);
+      _physicalKeyboardLayout = availableLayouts.firstWhere(
+          (layout) => layout.name == prefs['physicalKeyboardLayoutName']);
       _initialKeyboardLayout = _keyboardLayout;
+      _initialPhysicalKeyboardLayout = _physicalKeyboardLayout;
 
       // Keyboard settings
       _keymapStyle = prefs['keymapStyle'];
@@ -292,8 +298,10 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
       _enableAutoHideHotKey = prefs['enableAutoHideHotKey'] ?? true;
       _enableToggleMoveHotKey = prefs['enableToggleMoveHotKey'] ?? true;
       _enablePreferencesHotKey = prefs['enablePreferencesHotKey'] ?? true;
-      _enableIncreaseOpacityHotKey = prefs['enableIncreaseOpacityHotKey'] ?? true;
-      _enableDecreaseOpacityHotKey = prefs['enableDecreaseOpacityHotKey'] ?? true;
+      _enableIncreaseOpacityHotKey =
+          prefs['enableIncreaseOpacityHotKey'] ?? true;
+      _enableDecreaseOpacityHotKey =
+          prefs['enableDecreaseOpacityHotKey'] ?? true;
 
       // Learn settings
       _learningModeEnabled = prefs['learningModeEnabled'];
@@ -325,6 +333,7 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
       'autoHideDuration': _autoHideDuration,
       'opacity': _opacity,
       'keyboardLayoutName': _initialKeyboardLayout!.name,
+      'physicalKeyboardLayoutName': _initialPhysicalKeyboardLayout!.name,
 
       // Keyboard settings
       'keymapStyle': _keymapStyle,
@@ -535,10 +544,12 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
 
   Future<void> _adjustWindowSize() async {
     _fadeIn();
-    double height =
-        _showTopRow ? _defaultWindowHeight + _defaultTopRowExtraHeight : _defaultWindowHeight;
-    double width =
-        _showTopRow ? _defaultWindowWidth + _defaultTopRowExtraWidth : _defaultWindowWidth;
+    double height = _showTopRow
+        ? _defaultWindowHeight + _defaultTopRowExtraHeight
+        : _defaultWindowHeight;
+    double width = _showTopRow
+        ? _defaultWindowWidth + _defaultTopRowExtraWidth
+        : _defaultWindowWidth;
     await windowManager.setSize(Size(width, height));
     await windowManager.setAlignment(Alignment.bottomCenter);
   }
@@ -563,7 +574,9 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
 
   void _setupKeyListener() {
     final receivePort = ReceivePort();
-    Isolate.spawn(setHook, receivePort.sendPort).then((_) {}).catchError((error) {
+    Isolate.spawn(setHook, receivePort.sendPort)
+        .then((_) {})
+        .catchError((error) {
       if (kDebugMode) {
         print('Error spawning Isolate: $error');
       }
@@ -637,8 +650,9 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
     if (!_autoHideEnabled) return;
 
     _autoHideTimer?.cancel();
-    _autoHideTimer =
-        Timer(Duration(milliseconds: (_autoHideDuration * 1000).round()), _handleAutoHide);
+    _autoHideTimer = Timer(
+        Duration(milliseconds: (_autoHideDuration * 1000).round()),
+        _handleAutoHide);
   }
 
   void _handleAutoHide() {
@@ -659,11 +673,15 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
         }
       }
     });
-    _showOverlay(_autoHideEnabled ? 'Auto-hide Enabled' : 'Auto-hide Disabled',
-        _autoHideEnabled ? const Icon(LucideIcons.timerReset) : const Icon(LucideIcons.timerOff));
+    _showOverlay(
+        _autoHideEnabled ? 'Auto-hide Enabled' : 'Auto-hide Disabled',
+        _autoHideEnabled
+            ? const Icon(LucideIcons.timerReset)
+            : const Icon(LucideIcons.timerOff));
     DesktopMultiWindow.getAllSubWindowIds().then((windowIds) {
       for (final id in windowIds) {
-        DesktopMultiWindow.invokeMethod(id, 'updateAutoHideFromMainWindow', _autoHideEnabled);
+        DesktopMultiWindow.invokeMethod(
+            id, 'updateAutoHideFromMainWindow', _autoHideEnabled);
       }
     });
     _saveAllPreferences();
@@ -682,8 +700,11 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
         _lastOpacity = newLastOpacity;
       });
 
-      _showOverlay('Opacity: ${(_lastOpacity * 100).round()}%',
-          increase ? const Icon(LucideIcons.plusCircle) : const Icon(LucideIcons.minusCircle));
+      _showOverlay(
+          'Opacity: ${(_lastOpacity * 100).round()}%',
+          increase
+              ? const Icon(LucideIcons.plusCircle)
+              : const Icon(LucideIcons.minusCircle));
     }
 
     _opacityDebounceTimer?.cancel();
@@ -695,7 +716,8 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
         _saveAllPreferences();
         DesktopMultiWindow.getAllSubWindowIds().then((windowIds) {
           for (final id in windowIds) {
-            DesktopMultiWindow.invokeMethod(id, 'updateOpacityFromMainWindow', _opacity);
+            DesktopMultiWindow.invokeMethod(
+                id, 'updateOpacityFromMainWindow', _opacity);
           }
         });
       }
@@ -737,8 +759,9 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
   }
 
   Future<void> _setupTray() async {
-    final String iconPath =
-        Platform.isWindows ? 'assets/images/app_icon.ico' : 'assets/images/app_icon.png';
+    final String iconPath = Platform.isWindows
+        ? 'assets/images/app_icon.ico'
+        : 'assets/images/app_icon.png';
     await Future.wait([
       trayManager.setIcon(iconPath),
       trayManager.setToolTip('OverKeys'),
@@ -746,7 +769,8 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
     trayManager.setContextMenu(Menu(items: [
       MenuItem.checkbox(
         key: 'toggle_mouse_events',
-        label: 'Move\t${_formatHotkey(_toggleMoveHotKey, _enableToggleMoveHotKey)}',
+        label:
+            'Move\t${_formatHotkey(_toggleMoveHotKey, _enableToggleMoveHotKey)}',
         checked: !_ignoreMouseEvents,
         onClick: (menuItem) {
           setState(() {
@@ -764,7 +788,8 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
       MenuItem.separator(),
       MenuItem.checkbox(
         key: 'toggle_auto_hide',
-        label: 'Auto Hide\t${_formatHotkey(_autoHideHotKey, _enableAutoHideHotKey)}',
+        label:
+            'Auto Hide\t${_formatHotkey(_autoHideHotKey, _enableAutoHideHotKey)}',
         checked: _autoHideEnabled,
         onClick: (menuItem) {
           _toggleAutoHide(!_autoHideEnabled);
@@ -781,7 +806,8 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
       MenuItem.separator(),
       MenuItem(
         key: 'preferences',
-        label: 'Preferences\t${_formatHotkey(_preferencesHotKey, _enablePreferencesHotKey)}',
+        label:
+            'Preferences\t${_formatHotkey(_preferencesHotKey, _enablePreferencesHotKey)}',
         onClick: (menuItem) {
           _showPreferences();
         },
@@ -789,7 +815,8 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
       MenuItem.separator(),
       MenuItem(
         key: 'toggle_visibility',
-        label: 'Hide/Show\t${_formatHotkey(_visibilityHotKey, _enableVisibilityHotKey)}',
+        label:
+            'Hide/Show\t${_formatHotkey(_visibilityHotKey, _enableVisibilityHotKey)}',
         onClick: (menuItem) {
           onTrayIconMouseDown();
         },
@@ -871,9 +898,11 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
         _preferencesHotKey,
         keyDownHandler: (hotKey) {
           if (kDebugMode) {
-            print('Preferences hotkey triggered. Opening/Focusing Preferences Window.');
+            print(
+                'Preferences hotkey triggered. Opening/Focusing Preferences Window.');
           }
-          _showOverlay('Opening Preferences', const Icon(LucideIcons.appWindow));
+          _showOverlay(
+              'Opening Preferences', const Icon(LucideIcons.appWindow));
           _showPreferences();
         },
       );
@@ -930,8 +959,11 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
   @override
   void onTrayIconMouseDown() {
     _forceHide = !_forceHide;
-    _showOverlay(_forceHide ? 'Keyboard Hidden' : 'Keyboard Shown',
-        _forceHide ? const Icon(LucideIcons.eyeOff) : const Icon(LucideIcons.eye));
+    _showOverlay(
+        _forceHide ? 'Keyboard Hidden' : 'Keyboard Shown',
+        _forceHide
+            ? const Icon(LucideIcons.eyeOff)
+            : const Icon(LucideIcons.eye));
     if (_isWindowVisible) {
       _fadeOut();
     } else {
@@ -959,7 +991,8 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
       for (int id in windowIds) {
         Map<String, dynamic>? windowData;
         try {
-          String? dataString = await DesktopMultiWindow.invokeMethod(id, 'getWindowType');
+          String? dataString =
+              await DesktopMultiWindow.invokeMethod(id, 'getWindowType');
           if (dataString != null) {
             windowData = jsonDecode(dataString);
             if (windowData != null && windowData['type'] == 'preferences') {
@@ -1011,12 +1044,29 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
         case 'updateLayout':
           final layoutName = call.arguments as String;
           setState(() {
-            if ((_kanataEnabled || _useUserLayout) && _advancedSettingsEnabled) {
+            if ((_kanataEnabled || _useUserLayout) &&
+                _advancedSettingsEnabled) {
               _initialKeyboardLayout =
-                  availableLayouts.firstWhere((layout) => layout.name == layoutName);
+                  (availableLayouts + availableVirtualLayouts)
+                      .firstWhere((layout) => layout.name == layoutName);
             } else {
-              _keyboardLayout = availableLayouts.firstWhere((layout) => layout.name == layoutName);
+              _keyboardLayout = (availableLayouts + availableVirtualLayouts)
+                  .firstWhere((layout) => layout.name == layoutName);
               _initialKeyboardLayout = _keyboardLayout;
+            }
+          });
+          _fadeIn();
+        case 'updatePhysicalLayout':
+          final physicalLayoutName = call.arguments as String;
+          setState(() {
+            if ((_kanataEnabled || _useUserLayout) &&
+                _advancedSettingsEnabled) {
+              _initialPhysicalKeyboardLayout = availableLayouts
+                  .firstWhere((layout) => layout.name == physicalLayoutName);
+            } else {
+              _physicalKeyboardLayout = availableLayouts
+                  .firstWhere((layout) => layout.name == physicalLayoutName);
+              _initialPhysicalKeyboardLayout = _physicalKeyboardLayout;
             }
           });
           _fadeIn();
@@ -1115,13 +1165,15 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
           setState(() => _keyTextColor = Color(keyTextColor));
         case 'updateKeyTextColorNotPressed':
           final keyTextColorNotPressed = call.arguments as int;
-          setState(() => _keyTextColorNotPressed = Color(keyTextColorNotPressed));
+          setState(
+              () => _keyTextColorNotPressed = Color(keyTextColorNotPressed));
         case 'updateKeyBorderColorPressed':
           final keyBorderColorPressed = call.arguments as int;
           setState(() => _keyBorderColorPressed = Color(keyBorderColorPressed));
         case 'updateKeyBorderColorNotPressed':
           final keyBorderColorNotPressed = call.arguments as int;
-          setState(() => _keyBorderColorNotPressed = Color(keyBorderColorNotPressed));
+          setState(() =>
+              _keyBorderColorNotPressed = Color(keyBorderColorNotPressed));
 
         // Animations settings
         case 'updateAnimationEnabled':
@@ -1381,6 +1433,7 @@ class _MainAppState extends State<MainApp> with TrayListener, WindowListener {
                   child: Center(
                     child: KeyboardScreen(
                       layout: _keyboardLayout,
+                      physicalLayout: _physicalKeyboardLayout,
                       keymapStyle: _keymapStyle,
                       showTopRow: _showTopRow,
                       showGraveKey: _showGraveKey,
